@@ -1,0 +1,19 @@
+To customize source code BEFORE building qgis set:
+QGIS_PRE_CUSTOMIZE_DIR
+
+To customize qgis install, AFTER post install steps, set:
+QGIS_POST_CUSTOMIZE_DIR
+
+Set environment variables prior to running `conda build ... qgis`
+
+In either directory, place .bat scripts and files in a directory. Each
+directory will be entered and any .bat file found will be called in
+alpha-numeric order.
+
+PRE_CUSTOMIZE examples:
+- Change graphics to be compiled into Qt RC file, e.g. splash screen
+- Patch src code when necessary for graphics customization
+
+POST_CUSTOMIZE examples:
+- Add custom plugins
+- Place a qgis_global_settings.ini in <prefix>\Library\apps\qgis

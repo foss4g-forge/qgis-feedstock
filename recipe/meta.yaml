@@ -27,6 +27,12 @@ source:
 build:
   number: 1000
   skip: true  # [py2k]
+  script_env:
+    # For just running CMake config during 'conda build'; set =1
+    - CONFIGONLY
+    # See: README-customize
+    - QGIS_PRE_CUSTOMIZE_DIR
+    - QGIS_POST_CUSTOMIZE_DIR
 
 requirements:
   build:
