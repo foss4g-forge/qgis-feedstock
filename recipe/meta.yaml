@@ -23,67 +23,76 @@ source:
     - 0005_CMakeLists.nosyslibs.patch  # [win]
 
 build:
-  number: 1
-  skip: true  # [not win or py2k]
+  number: 1000
+  skip: true  # [py2k]
 
 requirements:
   build:
+    - {{ compiler('c') }}
+    - {{ compiler('cxx') }}
     - cmake
     - ninja
     - m2-flex  # [win]
     - m2-bison  # [win]
     - m2-m4  # [win]
-    - {{ compiler('c') }}
-    - {{ compiler('cxx') }}
+    - m2-patch  # [win]
+    - m2-sed  # [win]
   host:
-    - python
-    - six
+    - python > 3.5
     - flex  # [unix]
     - bison  # [unix]
     - m4  # [unix]
     - sip
     - expat
     - icu
+    - libiconv
     - libzip
     - libtasn1  # [osx]
-    # Qt stack.
-    - qt
-    - pyqt
-    - qtwebkit  # [osx]
+    # Qt stack
+    - qt 5.9.*
+    - pyqt 5.9.*
+    - qtwebkit 5.9.*
     - qscintilla2
     - qca
-    - qjson
     - qwt
     - qwtpolar
     - qtkeychain
-    - qtlocation
-    # GDAL stack.
-    - gdal
+    # GDAL stack
+    - gdal > 2.3
     - geos
     - proj4
-    # GSL for georeferencer.
+    # GSL for georeferencer
     - gsl
     - sqlite
     - libspatialindex
     - libspatialite
-    # For PostgreSQL support.
-    - postgresql
-    - psycopg2
+    - libpq
+    - oracle-oci-libs
+    # osgeo-forge and osgeo4w build support
+    - win-utils  # [win]
+    # - menuinst  # [win]
+    - osgf-env
+    # C++ plugin support
+    - grass 7.*
+    # Python pkgs
+    - six
+
   run:
-    - python
+    - python > 3.5
+    - expat
     - icu
+    - libiconv
     - libzip
     - libtasn1  # [osx]
-    - qt
-    - pyqt
-    - qtwebkit  # [osx]
+    - qt 5.9.*
+    - pyqt 5.9.*
+    - qtwebkit 5.9.*
+    - pyqtwebkit 5.9.*
     - qscintilla2
     - qca
-    - qjson
     - qwt
     - qwtpolar
     - qtkeychain
-    - qtlocation
     - gdal
     - geos
     - proj4
@@ -91,25 +100,34 @@ requirements:
     - sqlite
     - libspatialindex
     - libspatialite
-    - psycopg2
-    - postgresql
+    - libpq
+    - oracle-oci-libs
+    # C++ plugin support
+    - grass 7.*
+    - gpsbabel
+    # osgeo-forge and osgeo4w support
+    - win-utils  # [win]
+    - osgf-env
+    # - menuinst  # [win]
     # Runtime Python library deps
-    - python-dateutil
     - future
     - httplib2
     - jinja2
     - markupsafe
     - mock
-    - nose
+    - nose2
+    - numpy
     - owslib
     - plotly
+    - psycopg2
     - pygments
     - pyproj
+    - python-dateutil
+    - pytz
+    - pyyaml
     - requests
     - six
     - sip
-    - pytz
-    - pyyaml
     - yaml
 
 test:
@@ -137,3 +155,4 @@ extra:
   recipe-maintainers:
     - ceholden
     - ocefpaf
+    - dakcarto
