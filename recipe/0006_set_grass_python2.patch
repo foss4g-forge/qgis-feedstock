@@ -1,0 +1,13 @@
+diff --git a/src/plugins/grass/qgsgrassshell.cpp b/src/plugins/grass/qgsgrassshell.cpp
+index dbe1b64..0a79076 100644
+--- a/src/plugins/grass/qgsgrassshell.cpp
++++ b/src/plugins/grass/qgsgrassshell.cpp
+@@ -135,7 +135,7 @@ void QgsGrassShell::initTerminal( QTermWidget *terminal )
+   env << "GRASS_HTML_BROWSER=" + QgsGrassUtils::htmlBrowserPath();
+   env << QStringLiteral( "GRASS_WISH=wish" );
+   env << QStringLiteral( "GRASS_TCLSH=tclsh" );
+-  env << QStringLiteral( "GRASS_PYTHON=python" );
++  env << QStringLiteral( "GRASS_PYTHON=python2" );
+ 
+   //args << "-text";
+   //args << QString( "%1/%2/%3" ).arg( QgsGrass::getDefaultGisdbase() ).arg( QgsGrass::getDefaultLocation() ).arg( QgsGrass::getDefaultMapset() );

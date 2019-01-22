@@ -21,6 +21,8 @@ source:
     - 0004_geoscmake.patch  # [win]
     # Don't try and install MSVC runtime libs as they already exist
     - 0005_CMakeLists.nosyslibs.patch  # [win]
+    # Ensure GRASS plugin's shell uses python2.exe
+    - 0006_set_grass_python2.patch  # [win]
 
 build:
   number: 1000
