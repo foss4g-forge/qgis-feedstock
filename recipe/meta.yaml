@@ -1,5 +1,5 @@
 {% set name = "qgis" %}
-{% set version = "3.0.2" %}
+{% set version = "3.4.4" %}
 
 package:
   name: qgis
@@ -7,19 +7,20 @@ package:
 
 source:
   url: https://qgis.org/downloads/{{ name }}-{{ version }}.tar.bz2
-  sha256: 4293f45753599fcce1e9cc8985104486d80eb8422e9c2647d9b7cde78a54ab11
+  sha256: f47d2bf714f4397b272ab6bad874dcbb5fc305cdfcc78a04e8e0c3255d67bcda
   patches:
     # QGIS inserts Qt plugin locations into PATH relative to build location
     # This patch fixes it so PATH is relative to install location
-    - plugins_path.patch  # [linux]
-    # by default looks for pyrcc5.bat on Windows, but we have pyrcc5.exe
-    - pyrcc.patch  # [win]
+    # FIXME: fails to patch under 3.4.4
+    - 0001_plugins_path.patch  # [linux]
+    # By default looks for pyrcc5.bat on Windows, but we have pyrcc5.exe
+    - 0002_pyrcc.patch  # [win]
     # spatialindex.lib is weirdly named on Windows
-    - spatialindex.patch  # [win]
-    # gets the wrong geos lib
-    - geoscmake.patch  # [win]
-    # don't try and install MSVC runtime libs as they already exist
-    - CMakeLists.nosyslibs.patch  # [win]
+    - 0003_spatialindex.patch  # [win]
+    # Dets the wrong geos lib
+    - 0004_geoscmake.patch  # [win]
+    # Don't try and install MSVC runtime libs as they already exist
+    - 0005_CMakeLists.nosyslibs.patch  # [win]
 
 build:
   number: 1
