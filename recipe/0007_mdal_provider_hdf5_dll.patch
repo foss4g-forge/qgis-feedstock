@@ -1,0 +1,12 @@
+diff --git a/src/providers/mdal/CMakeLists.txt b/src/providers/mdal/CMakeLists.txt
+index 4e2c50c..ab4aaec 100644
+--- a/src/providers/mdal/CMakeLists.txt
++++ b/src/providers/mdal/CMakeLists.txt
+@@ -144,6 +144,7 @@ IF (WITH_GUI)
+ ENDIF (WITH_GUI)
+ 
+ IF (HDF5_FOUND)
++  ADD_DEFINITIONS(-DH5_BUILT_AS_DYNAMIC_LIB)
+   TARGET_INCLUDE_DIRECTORIES(mdalprovider PRIVATE ${HDF5_INCLUDE_DIRS})
+   TARGET_LINK_LIBRARIES(mdalprovider ${HDF5_C_LIBRARIES} )
+ ENDIF (HDF5_FOUND)

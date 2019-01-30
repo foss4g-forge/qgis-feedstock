@@ -15,17 +15,17 @@ source:
     - 0001_plugins_path.patch  # [linux]
     # By default looks for pyrcc5.bat on Windows, but we have pyrcc5.exe
     - 0002_pyrcc.patch  # [win]
-    # spatialindex.lib is weirdly named on Windows
-    - 0003_spatialindex.patch  # [win]
     # Dets the wrong geos lib
     - 0004_geoscmake.patch  # [win]
     # Don't try and install MSVC runtime libs as they already exist
     - 0005_CMakeLists.nosyslibs.patch  # [win]
     # Ensure GRASS plugin's shell uses python2.exe
     - 0006_set_grass_python2.patch  # [win]
+    # See: https://github.com/conda-forge/gdal-feedstock/issues/25
+    - 0007_mdal_provider_hdf5_dll.patch  # [win]
 
 build:
-  number: 1000
+  number: 1003
   skip: true  # [py2k]
   script_env:
     # For just running CMake config during 'conda build'; set =1
@@ -66,7 +66,7 @@ requirements:
     - qwtpolar
     - qtkeychain
     # GDAL stack
-    - gdal >=2.3
+    - gdal >=2.4
     - geos
     - proj4
     # GSL for georeferencer
@@ -84,6 +84,11 @@ requirements:
     - grass 7.*
     # Python pkgs
     - six
+    # Python pkgs to launch QGIS when debugging during conda build
+    - owslib
+    - psycopg2
+    # Just to ensure older 'defaults' one is not used
+    - numpy >=1.15
 
   run:
     - python >=3.6
@@ -101,7 +106,7 @@ requirements:
     - qwt
     - qwtpolar
     - qtkeychain
-    - gdal >=2.3
+    - gdal >=2.4
     - geos
     - proj4
     - gsl
@@ -124,7 +129,7 @@ requirements:
     - markupsafe
     - mock
     - nose2
-    - numpy
+    - numpy >=1.15
     - owslib
     - plotly
     - psycopg2

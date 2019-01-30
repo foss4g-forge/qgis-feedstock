@@ -8,6 +8,6 @@ index dbe1b64..0a79076 100644
    env << QStringLiteral( "GRASS_TCLSH=tclsh" );
 -  env << QStringLiteral( "GRASS_PYTHON=python" );
 +  env << QStringLiteral( "GRASS_PYTHON=python2" );
- 
+
    //args << "-text";
    //args << QString( "%1/%2/%3" ).arg( QgsGrass::getDefaultGisdbase() ).arg( QgsGrass::getDefaultLocation() ).arg( QgsGrass::getDefaultMapset() );

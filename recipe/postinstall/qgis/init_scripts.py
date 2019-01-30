@@ -8,7 +8,7 @@
 
 import os
 import imp
-from qgis.core import QgsApplication, QgsMessageLog
+from qgis.core import QgsApplication, QgsMessageLog, Qgis
 
 try:
     custom_scripts_directory = os.environ['QGIS_INIT_SCRIPTS_DIRECTORY']
@@ -33,7 +33,7 @@ if os.path.exists(custom_scripts_directory):
             except ImportError as ex:
                 QgsMessageLog.logMessage("Init script import error: %s\n%s" % (s, ex), tag="Init script", level=QgsMessageLog.CRITICAL)
     else:
-        QgsMessageLog.logMessage("Init scripts directory has no runnable scripts: %s" % custom_scripts_directory, tag="Init script", level=QgsMessageLog.WARNING)
-        
+        QgsMessageLog.logMessage("Init scripts directory has no runnable scripts: %s" % custom_scripts_directory, tag="Init script", level=Qgis.Warning)
+
 else:
-    QgsMessageLog.logMessage("Init scripts directory does not exist: %s" % custom_scripts_directory, tag="Init script", level=QgsMessageLog.WARNING)
+    QgsMessageLog.logMessage("Init scripts directory does not exist: %s" % custom_scripts_directory, tag="Init script", level=Qgis.Warning)

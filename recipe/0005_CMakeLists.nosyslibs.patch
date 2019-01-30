@@ -6,6 +6,6 @@
    ENDIF()
 -  INCLUDE(InstallRequiredSystemLibraries)
 +  #INCLUDE(InstallRequiredSystemLibraries)
- 
+
    SET(CPACK_PACKAGE_DESCRIPTION_SUMMARY "QGIS")
    SET(CPACK_PACKAGE_VENDOR "Open Source Geospatial Foundation")

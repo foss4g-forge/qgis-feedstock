@@ -4,17 +4,19 @@ set "MSG_LOG=%PREFIX%\.messages.txt"
 set _msg_cnt=0
 
 if not exist "%LIBRARY_PREFIX%" (
-  echo "%DATE% %TIME% pre-unlink error: %LIBRARY_PREFIX% not found" >> "%MSG_LOG%"
-  set /a "_msg_cnt=_msg_cnt+1"
+  echo "%DATE% %TIME% qgis pre-unlink error: %LIBRARY_PREFIX% not found" >> "%MSG_LOG%"
+  exit 1
 )
 
-set "OSGEO4W_ROOT=%LIBRARY_PREFIX%"
-
 REM Remove generated files
-del /q "%OSGEO4W_ROOT%\bin\qgis-bin.env"
-del /q "%OSGEO4W_ROOT%\apps\qgis\python\qgis\qgisconfig.py"
-del /q "%OSGEO4W_ROOT%\apps\qgis\bin\qgis.reg"
+del /q "%LIBRARY_PREFIX%\bin\qgis-bin.env"
+del /q "%LIBRARY_PREFIX%\apps\qgis\python\qgis\qgisconfig.py"
+del /q "%LIBRARY_PREFIX%\apps\qgis\bin\qgis.reg"
+del /q "%LIBRARY_PREFIX%\apps\qgis\bin\qt.conf"
 
-del /s /q "%OSGEO4W_ROOT%\apps\qgis\python\*.pyc"
+del /s /q "%LIBRARY_PREFIX%\apps\qgis\python\*.pyc"
+
+REM Remove any custom init_scripts added after installation
+del /s /q "%LIBRARY_PREFIX%\apps\qgis\python\init_scripts\*"
 
 REM TODO: exit 1 on _msg_cnt > 0, once script is totally awesome
