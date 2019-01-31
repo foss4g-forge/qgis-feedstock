@@ -9,11 +9,11 @@ pushd "%~dp0"
 
   @echo off
   if exist grass_env.bat (
-    path "%LIBRARY_PREFIX%\apps\qgis\bin;%GISBASE%\lib;%GISBASE%\bin;%PATH%"
+    set "PATH=%LIBRARY_PREFIX%\apps\qgis\bin;%GISBASE%\lib;%GISBASE%\bin;%PATH%"
   ) else (
-    path "%LIBRARY_PREFIX%\apps\qgis\bin;%PATH%"
+    set "PATH=%LIBRARY_PREFIX%\apps\qgis\bin;%PATH%"
   )
-  set QGIS_PREFIX_PATH=%LIBRARY_PREFIX_POSIX%/apps/qgis
+  set "QGIS_PREFIX_PATH=%LIBRARY_PREFIX_POSIX%/apps/qgis"
   set GDAL_FILENAME_IS_UTF8=YES
   rem Set VSI cache to be used as buffer, see #6448
   set VSI_CACHE=TRUE

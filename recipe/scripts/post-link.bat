@@ -50,8 +50,8 @@ if exist "%LIBRARY_PREFIX_SHORT%\apps\qgis\resources\qgis_global_settings.ini.tm
   %LIBRARY_PREFIX_SHORT%\bin\textreplace ^
     -sf "%LIBRARY_PREFIX_SHORT%\apps\qgis\resources\qgis_global_settings.ini.tmpl" ^
     -df "%LIBRARY_PREFIX_SHORT%\apps\qgis\resources\qgis_global_settings.ini" ^
-    -map @conda_prefix@ %PREFIX:\=\\% ^
-    -map @conda_root@ %PREFIX:\=/%
+    -map @conda_prefix@ "%PREFIX:\=\\%" ^
+    -map @conda_root@ "%PREFIX:\=/%"
   if errorlevel 1 (
     echo "%DATE% %TIME% qgis post-link error: textreplace of qgis_global_settings.ini.tmpl failed" >> "%MSG_LOG%"
     set /a "_msg_cnt=_msg_cnt+1"
