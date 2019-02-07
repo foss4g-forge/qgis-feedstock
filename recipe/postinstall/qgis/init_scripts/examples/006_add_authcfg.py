@@ -10,7 +10,7 @@
 
 
 from qgis.PyQt.QtCore import QSettings
-from qgis.core import QgsAuthManager, QgsAuthMethodConfig, QgsMessageLog, Qgis
+from qgis.core import QgsApplication, QgsAuthManager, QgsAuthMethodConfig, QgsMessageLog, Qgis
 
 AUTHDB_MASTERPWD = 'password'
 
@@ -20,7 +20,7 @@ QgsMessageLog.logMessage("Init script: %s" % __file__, tag="Init script", level=
 if not QSettings().value("InitScript/AuthCfgCreated", type=bool):
     QSettings().setValue("InitScript/AuthCfgCreated", True)
     # Check if authdb master password is set
-    am = QgsAuthManager.instance()
+    am = QgsApplication.authManager()
     if not am.masterPasswordHashInDb():
         # Set it!
         am.setMasterPassword(AUTHDB_MASTERPWD, True)

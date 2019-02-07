@@ -25,7 +25,7 @@ source:
     - 0007_mdal_provider_hdf5_dll.patch  # [win]
 
 build:
-  number: 1005
+  number: 1009
   skip: true  # [py2k]
   script_env:
     # For just running CMake config during 'conda build'; set =1
