@@ -19,7 +19,7 @@ pushd "%~dp0"
   set VSI_CACHE=TRUE
   set VSI_CACHE_SIZE=1000000
   REM Add qt plugins search path, while honoring any user-set QT_PLUGIN_PATH
-  set "QT_PLUGIN_PATH=%LIBRARY_PREFIX%\apps\qgis\qtplugins;%LIBRARY_PREFIX%\plugins;%QT_PLUGIN_PATH%"
+  set "QT_PLUGIN_PATH=%LIBRARY_PREFIX_POSIX%/apps/qgis/qtplugins;%LIBRARY_PREFIX_POSIX%/plugins;%QT_PLUGIN_PATH%"
 
   REM Extra deployed plugins within %LIBRARY_PREFIX%
   REM Plugins should be installed as expanded plugin archive, via separate conda package
