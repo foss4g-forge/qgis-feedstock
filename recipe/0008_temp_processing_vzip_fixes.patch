@@ -1,0 +1,118 @@
+diff --git a/python/plugins/processing/algs/gdal/GdalAlgorithm.py b/python/plugins/processing/algs/gdal/GdalAlgorithm.py
+index 59c51d4..0dd08ad 100644
+--- a/python/plugins/processing/algs/gdal/GdalAlgorithm.py
++++ b/python/plugins/processing/algs/gdal/GdalAlgorithm.py
+@@ -103,20 +103,25 @@ class GdalAlgorithm(QgsProcessingAlgorithm):
+         elif input_layer.dataProvider().name() == 'ogr':
+             if executing:
+                 # parameter is a vector layer, with OGR data provider
+-                # so extract selection if required
+-                ogr_data_path = self.parameterAsCompatibleSourceLayerPath(parameters, parameter_name, context,
++                # so extract selection if required      
++                ogr_data_path = GdalUtils.ogrConnectionStringFromLayer(input_layer)          
++                if input_layer.source().lower().startswith("/vsizip"):                    
++                    ogr_layer_name = GdalUtils.ogrLayerName(input_layer.dataProvider().dataSourceUri())
++                else:
++                    ogr_data_path = self.parameterAsCompatibleSourceLayerPath(parameters, parameter_name, context,
+                                                                           QgsVectorFileWriter.supportedFormatExtensions(),
+                                                                           feedback=feedback)
+-                parts = QgsProviderRegistry.instance().decodeUri('ogr', ogr_data_path)
+-                ogr_data_path = parts['path']
+-                if 'layerName' in parts and parts['layerName']:
+-                    ogr_layer_name = parts['layerName']
+-                else:
+-                    ogr_layer_name = GdalUtils.ogrLayerName(ogr_data_path)
++                    parts = QgsProviderRegistry.instance().decodeUri('ogr', ogr_data_path)
++                    ogr_data_path = parts['path']
++                    #ogr_data_path = checkIsZipped(ogr_data_path, self.parameterAsVectorLayer(parameters, parameter_name, context), context)
++                    if 'layerName' in parts and parts['layerName']:
++                        ogr_layer_name = parts['layerName']
++                    else:
++                        ogr_layer_name = GdalUtils.ogrLayerName(ogr_data_path)
+             else:
+                 #not executing - don't worry about 'selected features only' handling. It has no meaning
+                 #for the command line preview since it has no meaning outside of a QGIS session!
+-                ogr_data_path = GdalUtils.ogrConnectionStringAndFormatFromLayer(input_layer)[0]
++                ogr_data_path = GdalUtils.ogrConnectionStringFromLayer(input_layer)
+                 ogr_layer_name = GdalUtils.ogrLayerName(input_layer.dataProvider().dataSourceUri())
+         else:
+             # vector layer, but not OGR - get OGR compatible path
+diff --git a/python/plugins/processing/algs/grass7/Grass7Algorithm.py b/python/plugins/processing/algs/grass7/Grass7Algorithm.py
+index 6d328e6..d584e4c 100644
+--- a/python/plugins/processing/algs/grass7/Grass7Algorithm.py
++++ b/python/plugins/processing/algs/grass7/Grass7Algorithm.py
+@@ -820,17 +820,23 @@ class Grass7Algorithm(QgsProcessingAlgorithm):
+                 # no support for directly reading layers by id in grass
+                 is_ogr_disk_based_layer = False
+ 
+-        if not is_ogr_disk_based_layer:
+-            # parameter is not a vector layer or not an OGR layer - try to convert to a source compatible with
+-            # grass OGR inputs and extract selection if required
+-            path = self.parameterAsCompatibleSourceLayerPath(parameters, name, context,
+-                                                             QgsVectorFileWriter.supportedFormatExtensions(),
+-                                                             feedback=feedback)
+-            ogr_layer = QgsVectorLayer(path, '', 'ogr')
++        if layer.source().startswith("/vsizip"):
++            temp = QgsProcessingUtils.generateTempFilename(os.path.basename(layer.source().lower()) + ".shp")
++            QgsVectorFileWriter.writeAsVectorFormat(layer, temp, context.defaultEncoding(), layer.crs(), "ESRI Shapefile")
++            ogr_layer = QgsVectorLayer(temp, '', 'ogr')
+             self.loadVectorLayer(name, ogr_layer, external=external, feedback=feedback)
+-        else:
+-            # already an ogr disk based layer source
+-            self.loadVectorLayer(name, layer, external=external, feedback=feedback)
++        else:            
++            if not is_ogr_disk_based_layer:
++                # parameter is not a vector layer or not an OGR layer - try to convert to a source compatible with
++                # grass OGR inputs and extract selection if required
++                path = self.parameterAsCompatibleSourceLayerPath(parameters, name, context,
++                                                                 QgsVectorFileWriter.supportedFormatExtensions(),
++                                                                 feedback=feedback)
++                ogr_layer = QgsVectorLayer(path, '', 'ogr')
++                self.loadVectorLayer(name, ogr_layer, external=external, feedback=feedback)
++            else:
++                # already an ogr disk based layer source
++                self.loadVectorLayer(name, layer, external=external, feedback=feedback)
+ 
+     def loadVectorLayer(self, name, layer, external=False, feedback=None):
+         """
+diff --git a/python/plugins/processing/algs/saga/SagaAlgorithm.py b/python/plugins/processing/algs/saga/SagaAlgorithm.py
+index 66843a8..44035d8 100644
+--- a/python/plugins/processing/algs/saga/SagaAlgorithm.py
++++ b/python/plugins/processing/algs/saga/SagaAlgorithm.py
+@@ -29,6 +29,7 @@ __revision__ = 'f6ddc62fdb8ae589d3827e84d0c25bf669931040'
+ import os
+ import importlib
+ from qgis.core import (Qgis,
++                       QgsVectorFileWriter,
+                        QgsApplication,
+                        QgsProcessingUtils,
+                        QgsProcessingException,
+@@ -199,6 +200,7 @@ class SagaAlgorithm(SagaAlgorithmBase):
+ 
+                 layer_path = self.parameterAsCompatibleSourceLayerPath(parameters, param.name(), context, ['shp'], 'shp', feedback=feedback)
+                 if layer_path:
++                    layer_path = self.checkIsZipped(layer_path, self.parameterAsVectorLayer(parameters, param.name(), context), context)
+                     self.exportedLayers[param.name()] = layer_path
+                 else:
+                     raise QgsProcessingException(
+@@ -239,6 +241,7 @@ class SagaAlgorithm(SagaAlgorithmBase):
+                         layer_path = self.parameterAsCompatibleSourceLayerPath(temp_params, param.name(), context, ['shp'], 'shp',
+                                                                                feedback=feedback)
+                         if layer_path:
++                            layer_path = self.checkIsZipped(layer_path, self.parameterAsVectorLayer(parameters, param.name(), context), context)
+                             if param.name() in self.exportedLayers:
+                                 self.exportedLayers[param.name()].append(layer_path)
+                             else:
+@@ -441,3 +444,11 @@ class SagaAlgorithm(SagaAlgorithmBase):
+                     if extent != extent2:
+                         return False, self.tr("Input layers do not have the same grid extent.")
+         return super(SagaAlgorithm, self).checkParameterValues(parameters, context)
++
++    def checkIsZipped(self, path, layer, context):
++        if path.lower().startswith("/vsizip"):
++            temp = QgsProcessingUtils.generateTempFilename(os.path.basename(path.lower()) + ".shp")
++            QgsVectorFileWriter.writeAsVectorFormat(layer, temp, context.defaultEncoding(), layer.crs(), "ESRI Shapefile")
++            return temp
++        else:
++            return path
+\ No newline at end of file

@@ -23,9 +23,11 @@ source:
     - 0006_set_grass_python2.patch  # [win]
     # See: https://github.com/conda-forge/gdal-feedstock/issues/25
     - 0007_mdal_provider_hdf5_dll.patch  # [win]
+    # Temp fixes for 3.4.4 and /vzip/ gdal/ogr paths (remove on pushed PRs)
+    - 0008_temp_processing_vzip_fixes.patch
 
 build:
-  number: 1010
+  number: 1011
   skip: true  # [py2k]
   script_env:
     # For just running CMake config during 'conda build'; set =1
