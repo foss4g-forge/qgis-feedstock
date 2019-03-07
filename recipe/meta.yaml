@@ -27,7 +27,7 @@ source:
     - 0008_temp_processing_vzip_fixes.patch
 
 build:
-  number: 1011
+  number: 1012
   skip: true  # [py2k]
   script_env:
     # For just running CMake config during 'conda build'; set =1

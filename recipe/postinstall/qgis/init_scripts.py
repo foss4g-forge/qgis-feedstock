@@ -7,7 +7,13 @@
 
 
 import os
-import imp
+try:
+    # since Py 3.1
+    import importlib.util
+    imp_util = True
+except ImportError:
+    import imp
+    imp_util = False
 from qgis.core import QgsApplication, QgsMessageLog, Qgis
 
 try:
@@ -26,7 +32,14 @@ if os.path.exists(custom_scripts_directory):
         for s in scripts:
             try:
                 try:
-                    imp.load_source(s.replace('.py', ''), os.path.join(custom_scripts_directory, s))
+                    if imp_util:
+                        spec = importlib.util.spec_from_file_location(s.replace('.py', ''),
+                            os.path.join(custom_scripts_directory, s))
+                        module = importlib.util.module_from_spec(spec)
+                        spec.loader.exec_module(module)
+                    else:
+                        # this is deprecated in Py3, but still works in 3.7
+                        imp.load_source(s.replace('.py', ''), os.path.join(custom_scripts_directory, s))
                     QgsMessageLog.logMessage("Init script has completed running: %s" % s, tag="Init script", level=Qgis.Info)
                 except Exception as ex:
                     QgsMessageLog.logMessage("Init script runtime error: %s\n%s" % (s, ex), tag="Init script", level=Qgis.Critical)
