@@ -1,0 +1,13 @@
+diff --git a/src/app/main.cpp b/src/app/main.cpp
+index 050cf9d..434e7b0 100644
+--- a/src/app/main.cpp
++++ b/src/app/main.cpp
+@@ -1380,7 +1380,7 @@ int main( int argc, char *argv[] )
+     //replace backslashes with forward slashes
+     pythonfile.replace( '\\', '/' );
+ #endif
+-    QgsPythonRunner::run( QStringLiteral( "exec(open('%1').read())" ).arg( pythonfile ) );
++    QgsPythonRunner::run( QStringLiteral( "with open('%1', 'r') as f: pf = f.read(); exec(pf)" ).arg( pythonfile ) );
+   }
+ 
+   /////////////////////////////////`////////////////////////////////////
