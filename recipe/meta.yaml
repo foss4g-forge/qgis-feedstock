@@ -90,7 +90,7 @@ requirements:
     - owslib
     - psycopg2
     # Just to ensure older 'defaults' one is not used
-    - numpy >=1.15
+    - numpy 1.15.3
 
   run:
     - python >=3.6
@@ -131,7 +131,7 @@ requirements:
     - markupsafe
     - mock
     - nose2
-    - numpy >=1.15
+    - numpy 1.15.3
     - owslib
     - plotly
     - psycopg2
