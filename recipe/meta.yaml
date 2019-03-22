@@ -25,6 +25,8 @@ source:
     - 0007_mdal_provider_hdf5_dll.patch  # [win]
     # Temp fixes for 3.4.4 and /vzip/ gdal/ogr paths (remove on pushed PRs)
     - 0008_temp_processing_vzip_fixes.patch
+    # Temp fix for open file on QGIS launch with --code (remove on pushed PR)
+    - 0009_temp_pyrunner_file_open.patch
 
 build:
   number: 1012
