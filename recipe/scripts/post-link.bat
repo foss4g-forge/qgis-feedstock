@@ -61,12 +61,24 @@ if exist "%LIBRARY_PREFIX_SHORT%\apps\qgis\resources\qgis_global_settings.ini.tm
 REM Parse registry template
 REM ini format requires \\ (doubled) path separators in Win filesys mappings
 REM Use full, expanded (non-short-name) Win paths for mappings
+
+REM Determine permission level for registry
+set "_reg=HKEY_LOCAL_MACHINE"
+set "_elev=elevate"
+REM Ref: https://stackoverflow.com/a/16248527
+reg add HKLM /F>nul 2>&1
+if errorlevel 1 (
+  set "_reg=HKEY_CURRENT_USER"
+  set "_elev=exec hide"
+)
+
 if exist "%LIBRARY_PREFIX_SHORT%\apps\qgis\bin\qgis.reg.tmpl" (
   %LIBRARY_PREFIX_SHORT%\bin\textreplace ^
     -sf "%LIBRARY_PREFIX_SHORT%\apps\qgis\bin\qgis.reg.tmpl" ^
     -df "%LIBRARY_PREFIX_SHORT%\apps\qgis\bin\qgis.reg" ^
     -map @package@ qgis ^
-    -map @osgeo4w@ "%LIBRARY_PREFIX:\=\\%"
+    -map @osgeo4w@ "%LIBRARY_PREFIX:\=\\%" ^
+    -map @reglevel@ %_reg%
   if errorlevel 1 (
     echo "%DATE% %TIME% qgis post-link error: textreplace of qgis.reg.tmpl failed" >> "%MSG_LOG%"
     set /a "_msg_cnt=_msg_cnt+1"
@@ -78,7 +90,7 @@ if exist "%LIBRARY_PREFIX_SHORT%\apps\qgis\bin\qgis.reg.tmpl" (
 
 REM Update registry
 if exist "%LIBRARY_PREFIX_SHORT%\apps\qgis\bin\qgis.reg" (
-  %LIBRARY_PREFIX_SHORT%\bin\nircmd elevate "%WINDIR%\regedit" /s "%LIBRARY_PREFIX_SHORT%\apps\qgis\bin\qgis.reg"
+  %LIBRARY_PREFIX_SHORT%\bin\nircmd %_elev% "%WINDIR%\regedit" /s "%LIBRARY_PREFIX_SHORT%\apps\qgis\bin\qgis.reg"
   if errorlevel 1 (
     echo "%DATE% %TIME% qgis post-link error: update of registry with qgis.reg failed" >> "%MSG_LOG%"
     set /a "_msg_cnt=_msg_cnt+1"
