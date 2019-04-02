@@ -88,6 +88,20 @@ if exist "%LIBRARY_PREFIX_SHORT%\apps\qgis\bin\qgis.reg.tmpl" (
     set /a "_msg_cnt=_msg_cnt+1"
 )
 
+if exist "%LIBRARY_PREFIX_SHORT%\apps\qgis\bin\qgis-remove.reg.tmpl" (
+  %LIBRARY_PREFIX_SHORT%\bin\textreplace ^
+    -sf "%LIBRARY_PREFIX_SHORT%\apps\qgis\bin\qgis-remove.reg.tmpl" ^
+    -df "%LIBRARY_PREFIX_SHORT%\apps\qgis\bin\qgis-remove.reg" ^
+    -map @reglevel@ %_reg%
+  if errorlevel 1 (
+    echo "%DATE% %TIME% qgis post-link error: textreplace of qgis-remove.reg.tmpl failed" >> "%MSG_LOG%"
+    set /a "_msg_cnt=_msg_cnt+1"
+  )
+) else (
+  echo "%DATE% %TIME% qgis post-link error: qgis-remove.reg.tmpl not found" >> "%MSG_LOG%"
+    set /a "_msg_cnt=_msg_cnt+1"
+)
+
 REM Update registry
 if exist "%LIBRARY_PREFIX_SHORT%\apps\qgis\bin\qgis.reg" (
   %LIBRARY_PREFIX_SHORT%\bin\nircmd %_elev% "%WINDIR%\regedit" /s "%LIBRARY_PREFIX_SHORT%\apps\qgis\bin\qgis.reg"

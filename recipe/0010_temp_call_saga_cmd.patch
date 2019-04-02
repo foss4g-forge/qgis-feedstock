@@ -1,0 +1,19 @@
+diff --git a/python/plugins/processing/algs/saga/SagaUtils.py b/python/plugins/processing/algs/saga/SagaUtils.py
+index 763eeac..657d7dc 100644
+--- a/python/plugins/processing/algs/saga/SagaUtils.py
++++ b/python/plugins/processing/algs/saga/SagaUtils.py
+@@ -108,11 +108,9 @@ def createSagaBatchJobFileFromSagaCommands(commands):
+         else:
+             pass
+         for command in commands:
+-            try:
+-                # Python 2
+-                fout.write('saga_cmd ' + command.encode('utf8') + '\n')
+-            except TypeError:
+-                # Python 3
++            if isWindows():
++                fout.write('call saga_cmd ' + command + '\n')
++            else:
+                 fout.write('saga_cmd ' + command + '\n')
+ 
+         fout.write('exit')

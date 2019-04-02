@@ -27,9 +27,11 @@ source:
     - 0008_temp_processing_vzip_fixes.patch
     # Temp fix for open file on QGIS launch with --code (remove on pushed PR)
     - 0009_temp_pyrunner_file_open.patch
+    # Temp fix for call saga_cmd
+    - 0010_temp_call_saga_cmd.patch  # [win]
 
 build:
-  number: 1014
+  number: 1015
   skip: true  # [py2k]
   script_env:
     # For just running CMake config during 'conda build'; set =1
