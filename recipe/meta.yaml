@@ -62,22 +62,19 @@ requirements:
     - libzip
     - libtasn1  # [osx]
     # Qt stack.
-    - qt
-    - pyqt
-    - qtwebkit  # [osx]
+    - qt 5.9.*
+    - pyqt 5.9.*
+    - qtwebkit 5.9.*  # [osx]
     - qscintilla2
     - qca
-    - qjson
     - qwt
     - qwtpolar
     - qtkeychain
-    - qtlocation
-    # included in win-64 Qt already but needed for linux/osx
-    - qtserialport  # [unix]
     # GDAL stack.
+    - libgdal
     - gdal
     - geos
-    - proj4
+    - proj4 5.2.*
     # GSL for georeferencer.
     - gsl
     - sqlite
@@ -100,20 +97,18 @@ requirements:
     - icu
     - libzip
     - libtasn1  # [osx]
-    - qt
-    - pyqt
-    - qtwebkit  # [osx]
+    - qt 5.9.*
+    - pyqt 5.9.*
+    - qtwebkit 5.9.*  # [osx]
     - qscintilla2
     - qca
-    - qjson
     - qwt
     - qwtpolar
     - qtkeychain
-    - qtlocation
-    - qtserialport  # [unix]
+    - libgdal
     - gdal
     - geos
-    - proj4
+    - proj4 5.2.*
     - gsl
     - sqlite
     - libspatialindex
