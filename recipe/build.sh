@@ -36,13 +36,13 @@ fi
 # TODO: enable QSPATIALITE on OSX
 cmake \
     -G Ninja \
-    -D CMAKE_BUILD_TYPE=Release \
+    -D CMAKE_BUILD_TYPE=RelWithDebInfo \
     -D CMAKE_INSTALL_PREFIX="${PREFIX}" \
     -D CMAKE_PREFIX_PATH="${PREFIX}" \
     -D PYTHON_EXECUTABLE="${PYTHON}" \
     -D ENABLE_TESTS=FALSE \
     -D WITH_BINDINGS=TRUE \
-    -D WITH_3D=FALSE \
+    -D WITH_3D=TRUE \
     -D WITH_DESKTOP=TRUE \
     -D WITH_SERVER=FALSE \
     -D WITH_GRASS=FALSE \
@@ -64,7 +64,7 @@ if [ $(uname) == Darwin ]; then
   mkdir -p $PREFIX/QGIS.app/Contents/MacOS/share
 
   # and create a link into the .app so we can run it.
-  ln -s $PREFIX/QGIS.app/Contents/MacOS/QGIS $PREFIX/bin/qgis
+  ln -sf $PREFIX/QGIS.app/Contents/MacOS/QGIS $PREFIX/bin/qgis
 fi
 
 
